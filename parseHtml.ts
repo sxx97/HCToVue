@@ -12,6 +12,7 @@ async function generateHtmlTemplate(path: string) {
     const data = await readFile(path, 'utf-8');
     parseHtmlCount++;
     const vcTag = parseVcTag(data);
+    console.log(vcTag, '+++++++++++', path);
     // console.log('解析的html数量', parseHtmlCount, data);
     return {
         template: replaceVcTag(data, vcTag),
@@ -25,7 +26,9 @@ async function generateHtmlTemplate(path: string) {
  */
 function parseVcTag(htmlStr: string): any[] {
     let vcTag  = [];
-    const re = new RegExp(/<vc\:create (.*?)>(.*?)<\/vc\:create>/, 'g');
+    
+    // /<vc\:create (.*?)>(.*?)<\/vc\:create>/  TODO: 初代
+    const re = new RegExp(/<vc\:create((\s+)(.*?))+>(.*?)<\/vc\:create>/, 'g');
     const propertyRe = new RegExp(/(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/, 'g');
     const vc = htmlStr.match(re);
     if (vc) {
@@ -55,9 +58,11 @@ function replaceVcTag(htmlStr: string, vcTag: any[]): string {
              tag += ` ${name}="${value.toString().replace(/"/g, '')}"`;
         }
         tag += `></${componentName}>`;
-        const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"(.*?)>(.*?)<\/vc\:create>', 'g');
+        // '<vc\:create name="' + val.name.replace(/"/g, '') + '"(.*?)>(.*?)<\/vc\:create>'
+        
+        const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"((\s+)(.*?))+>(.*?)<\/vc\:create>', 'g');
         htmlStr = htmlStr.replace(re, tag);
-        console.log(tag, '+++++++++++');
+        // console.log(tag, '+++++++++++');
     })
     return htmlStr;
 }

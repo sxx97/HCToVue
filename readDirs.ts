@@ -148,6 +148,24 @@ function mergeFile(template: string, script: string, style: string) {
     `
 }
 
+
+
+
+async function readPageComponent(path: string) {
+    let dirs = await readDir(path);
+    let pageComponent = [];
+    let files = dirs.filter(async val => {
+        const dirInfo = await fsStats(path+'/'+val);    
+        return dirInfo.isFile();
+    })
+    for(let file of files) {
+        await generateHtmlTemplate(path + '/' + file).then(res => {
+            pageComponent.push(res.components);
+        });
+    }
+}
+
+
 export {
     readDirs,
     firstUpperCase,
