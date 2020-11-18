@@ -1,0 +1,129 @@
+
+        <template>
+            <div class="row">
+
+    <div class="col-lg-12">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>欠费信息</h5>
+                <div class="ibox-tools" style="top: 10px;">
+
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button"
+                                class="btn btn-light btn-sm"
+                                v-bind:class="{'btn-primary': indexArrearsInfo.feeTypeCd == 888800010001}"
+                                v-on:click="_switchFeeType(888800010001)"
+                        >物业费</button>
+
+
+                        <button type="button"
+                                class="btn btn-light btn-sm"
+                                v-bind:class="{'btn-primary': indexArrearsInfo.feeTypeCd == 888800010005}"
+                                v-on:click="_switchFeeType(888800010005)"
+                        >停车费</button>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>费用ID </th>
+                            <th>业主名称 </th>
+                            <th>联系电话 </th>
+                            <th>{{indexArrearsInfo.feeTypeCd == 888800010001? '房间' : '车位'}}编号 </th>
+                            <th>费用开始时间 </th>
+                            <th>费用到期时间 </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="arr in indexArrearsInfo.arrears">
+                            <td>{{arr.feeId}}</td>
+                            <td>{{arr.ownerName}}</td>
+                            <td>{{arr.tel}}</td>
+                            <td>{{arr.num}}</td>
+                            <td>{{arr.startTime}}</td>
+                            <td>{{arr.endTime}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- 分页 -->
+                    <Pagination name="pagination"></Pagination>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+        </template>
+        <script>
+            import Pagination from './Pagination.vue';
+        export default {
+            props: {},
+            components: {
+                
+            },
+            data () {
+                return {"indexArrearsInfo":"[object Object]"}    
+            },
+            mounted() {
+             (function(){
+            this._listArrearsData(DEFAULT_PAGE,DEFAULT_ROWS);
+        })()(function(){
+            this.$vc.on("indexArrears","_listArrearsData",function(){
+                this._listArrearsData(DEFAULT_PAGE,DEFAULT_ROWS);
+            });
+            this.$vc.on('pagination','page_event',function(_currentPage){
+                this._listArrearsData(_currentPage,DEFAULT_ROWS);
+            });
+        })()   
+            },
+            methods: {
+                _listArrearsData:function(_page,_row){
+                if(this.$vc.getCurrentCommunity() == null || this.$vc.getCurrentCommunity == undefined){
+                    return ;
+                }
+                var param = {
+                    params:{
+                        page:_page,
+                        row:_row,
+                        communityId:this.$vc.getCurrentCommunity().communityId,
+                        feeTypeCd:this.indexArrearsInfo.feeTypeCd
+                    }
+                }
+
+               //发送get请求
+               this.$vc.http.get('listArrears',
+                            'list',
+                             param,
+                             function(json,res){
+                                var listArrearsData =JSON.parse(json);
+
+                                this.indexArrearsInfo.total = listArrearsData.total;
+                                this.indexArrearsInfo.records = listArrearsData.records;
+                                this.indexArrearsInfo.arrears = listArrearsData.arrears;
+
+                                this.$vc.emit('pagination','init',{
+                                    total:this.indexArrearsInfo.records,
+                                    currentPage:_page
+                                });
+                             },function(errInfo,error){
+                                console.log('请求失败处理');
+                             }
+                           );
+
+            },_switchFeeType:function(_feeTypeCd){
+                console.log('_feeTypeCd')
+                this.indexArrearsInfo.feeTypeCd = _feeTypeCd;
+                this._listArrearsData(DEFAULT_PAGE,DEFAULT_ROWS);
+            },
+            },
+        }
+    
+        </script>
+        <style>
+            
+        </style>
+    
