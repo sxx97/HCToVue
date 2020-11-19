@@ -27,8 +27,10 @@ async function generateHtmlTemplate(path: string) {
 function parseVcTag(htmlStr: string): any[] {
     let vcTag  = [];
     
-    // /<vc\:create (.*?)>(.*?)<\/vc\:create>/  TODO: 初代
-    const re = new RegExp(/<vc\:create((\s+)(.*?))+>(.*?)<\/vc\:create>/, 'g');
+    // /<vc\:create (.*?)>(.*?)<\/vc\:create>/  XXX: 初代
+    const re = new RegExp(/<vc\:create\s+.*?(\s+.*?)*><\/vc\:create>/, 'g'); // FIXME: 性能极慢，待优化 2
+    // const re = new RegExp(/<vc\:create((\s+)(.*?))+><\/vc\:create>/, 'g'); // FIXME: 性能极慢，待优化  1
+    // const re = new RegExp(/<vc\:create (.*?)><\/vc\:create>/, 'g');
     const propertyRe = new RegExp(/(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/, 'g');
     const vc = htmlStr.match(re);
     if (vc) {
@@ -58,9 +60,11 @@ function replaceVcTag(htmlStr: string, vcTag: any[]): string {
              tag += ` ${name}="${value.toString().replace(/"/g, '')}"`;
         }
         tag += `></${componentName}>`;
-        // '<vc\:create name="' + val.name.replace(/"/g, '') + '"(.*?)>(.*?)<\/vc\:create>'
         
-        const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"((\s+)(.*?))+>(.*?)<\/vc\:create>', 'g');
+        const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"(\s+.*?)(\s+.*?)*><\/vc\:create>', 'g'); // FIXME: 性能极慢，待优化 2
+        // const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"((\s+.*?)*)+><\/vc\:create>', 'g'); // FIXME: 性能极慢，待优化  1
+        
+        // const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"(.*?)><\/vc\:create>', 'g');  
         htmlStr = htmlStr.replace(re, tag);
         // console.log(tag, '+++++++++++');
     })

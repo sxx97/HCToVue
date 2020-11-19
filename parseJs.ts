@@ -15,7 +15,7 @@ interface VueTemplate {
 let parseJsCount = 0;
 let scriptTemplate = '',
     vueTemplate: VueTemplate[] = [];
-
+let imports = [];
 
 // 页面中常用的js常量
 const OWNER_TYPE = {
@@ -83,9 +83,9 @@ let window = {
             let methods = '',
                 mounted = '',
                 props = {},
-                dataObj = {};
-            mounted += `(${replaceVcContent(options._initMethod)})()`;
-            mounted += `(${replaceVcContent(options._initEvent)})()`;
+                dataObj = {};                
+            mounted += anonymousToArrow(`(${replaceVcContent(String(options._initMethod).replace('_initMethod', 'function'))})()`)+'\n';
+            mounted += anonymousToArrow(`(${replaceVcContent(String(options._initEvent).replace('_initEvent', 'function'))})()`);
             
             if(options.propTypes) {
                 for(const [key, value] of Object.entries(options.propTypes)) {
@@ -96,16 +96,20 @@ let window = {
             if (options.methods) {
                 for(const [key, value] of Object.entries(options.methods)) {                
                     if (value.toString().includes(key) && value.toString().indexOf(key) < 10) {
-                        methods += replaceVcContent(value)+','
+                        methods += replaceVcContent(anonymousToArrow(value.toString()))+','
                     } else {
-                        methods += key+':'+replaceVcContent(value)+','
+                        methods += key+':'+replaceVcContent(anonymousToArrow(value.toString()))+','
                     }
                     
                 }
             }
             
             for(const [key, value] of Object.entries(options.data)) {
-                dataObj[key] = replaceVcContent(value);
+                if(key == 'callBackListener' || value == null) {
+                    dataObj[key] = replaceVcContent(value)
+                } else {
+                    dataObj[key] = JSON.parse(replaceVcContent(JSON.stringify(value)));
+                }
             }
 
             // console.log(options, '传入参数');
@@ -167,11 +171,31 @@ class Vue {
 }
 
 
+/**
+ * 匿名函数转换箭头函数
+ * @param jsStr 
+ */
+function anonymousToArrow(jsStr: string) {
+    const re = new RegExp(/(,|\()\s*(?<!:\s*)function\s*\(\s*.*\)\s*{/, 'g');
+    const matchRes = jsStr.match(re);
+    if (matchRes) {
+        matchRes.forEach(val => {
+            jsStr = jsStr.replace(val, val.replace('function', '').replace(')', ') =>'));
+        })
+    }
+    return jsStr;
+}
 
 
-async function generateScriptTemplate(path: string) {
+/**
+ * 阅读文件并返回js模板
+ * @param path 文件路径
+ * @param componentImport 导入的组件
+ */
+async function generateScriptTemplate(path: string, componentImport: string[]) {
     let parseErr: any | null = null;
     const data = await readFile(path, 'utf-8');
+    imports = componentImport;
     // console.log(path, '/n/n/n/n==============================================/n/n/n/n')
     // console.log('==============================================');
     // console.log('==============================================');
@@ -211,10 +235,10 @@ async function generateScriptTemplate(path: string) {
  * @param str 
  */
 function replaceVcContent(str: any) {
-    return str.toString().replace(/vc\.this/g, 'this')
+    return String(str).replace(/vc\.this/g, 'this')
         .replace(/vc/g, 'this.$vc')
-        .replace(/vc.component.emit/g,'vc.emit')
-        .replace(/vc.component.on/g,'vc.on')
+        .replace(/vc.component.emit/g, 'vc.emit')
+        .replace(/vc.component.on/g, 'vc.on')
         .replace(/this.\$vc.component/g,'this');
         
 }
@@ -226,22 +250,70 @@ function replaceVcContent(str: any) {
  * @param mounted mounted部分
  */
 function jsTemplate(data, methods, mounted, props) {
+    let importStatement = '';
+    imports.forEach(val => {
+        importStatement += `import ${val} from '@/component/${val}.vue';`
+    })
     return `
-        export default {
-            props: ${props},
-            components: {
-                
-            },
-            data () {
-                return ${data}    
-            },
-            mounted() {
-             ${mounted}   
-            },
-            methods: {
-                ${methods}
-            },
-        }
+            ${importStatement}
+
+
+
+            const OWNER_TYPE = {
+                OWNER: '1001',
+                TENANT: '1003'
+            };
+            // 考核类型
+            const ASSESSMENT_TYPE = {
+                BUSINESS: 2,
+                COMMON: 1,
+                SYSTEM: 3,
+            };
+            
+            // 删除时的类型
+            const DELETE_TYPE = {
+                TABLE: 1, // 删除通用考核表
+                BUSINESS_ITEM: 2,  // 删除业务考核项
+                COMMON_ITEM: 3, // 删除通用考核项
+            }
+            // 考核人员
+            const ASSESSMENT_OBJECT_TYPE = {
+                STAFF: 1,
+                SUPERVISOR: 2,
+                MANAGER: 3,
+            }
+            
+            const AUTO_ASSESSMENT_TYPE = {
+                INSPECTION: 1,
+                WORK_ORDER: 2,
+                ATTENDANCE: 3,
+            }
+            
+            // 考核项目
+            const ASSESSMENT_ITEM_TYPE = {
+                COMMON_ITEM: 1,
+                BUSINESS_ITEM: 2,
+            }
+            
+            const DEFAULT_PAGE = 1;
+            const DEFAULT_ROWS = 10;
+
+            
+            export default {
+                props: ${props},
+                components: {
+                    ${imports}
+                },
+                data () {
+                    return ${data}    
+                },
+                mounted() {
+                ${mounted}   
+                },
+                methods: {
+                    ${methods}
+                },
+            }
     `
 }
 
