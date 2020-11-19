@@ -12,7 +12,6 @@ async function generateHtmlTemplate(path: string) {
     const data = await readFile(path, 'utf-8');
     parseHtmlCount++;
     const vcTag = parseVcTag(data);
-    console.log(vcTag, '+++++++++++', path);
     // console.log('解析的html数量', parseHtmlCount, data);
     return {
         template: replaceVcTag(data, vcTag),
@@ -27,10 +26,7 @@ async function generateHtmlTemplate(path: string) {
 function parseVcTag(htmlStr: string): any[] {
     let vcTag  = [];
     
-    // /<vc\:create (.*?)>(.*?)<\/vc\:create>/  XXX: 初代
-    const re = new RegExp(/<vc\:create\s+.*?(\s+.*?)*><\/vc\:create>/, 'g'); // FIXME: 性能极慢，待优化 2
-    // const re = new RegExp(/<vc\:create((\s+)(.*?))+><\/vc\:create>/, 'g'); // FIXME: 性能极慢，待优化  1
-    // const re = new RegExp(/<vc\:create (.*?)><\/vc\:create>/, 'g');
+    const re = new RegExp(/(?<!\<!--\s*)<vc\:create\s+.*?(\s+.*?)*>(\s*.*?)<\/vc\:create>/, 'g');
     const propertyRe = new RegExp(/(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/, 'g');
     const vc = htmlStr.match(re);
     if (vc) {
@@ -56,15 +52,12 @@ function replaceVcTag(htmlStr: string, vcTag: any[]): string {
     vcTag.forEach(val => {
         const componentName = firstUpperCase(val.name.replace(/"/g, ''));
         let tag = `<${componentName}`;
-        for (const [name, value] of Object.entries(val)) {
-             tag += ` ${name}="${value.toString().replace(/"/g, '')}"`;
+        for (const [key, value] of Object.entries(val)) {
+             tag += ` ${key}="${value.toString().replace(/"/g, '')}"`;
         }
         tag += `></${componentName}>`;
         
-        const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"(\s+.*?)(\s+.*?)*><\/vc\:create>', 'g'); // FIXME: 性能极慢，待优化 2
-        // const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"((\s+.*?)*)+><\/vc\:create>', 'g'); // FIXME: 性能极慢，待优化  1
-        
-        // const re = new RegExp('<vc\:create name="' + val.name.replace(/"/g, '') + '"(.*?)><\/vc\:create>', 'g');  
+        const re = new RegExp('(?<!\<!--\s*)<vc\:create name="' + val.name.replace(/"/g, '') + '"(\s+.*?)(\s+.*?)*>(\s*.*?)<\/vc\:create>', 'g');  
         htmlStr = htmlStr.replace(re, tag);
         // console.log(tag, '+++++++++++');
     })

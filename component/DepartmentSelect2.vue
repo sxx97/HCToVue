@@ -1,0 +1,162 @@
+
+        <template>
+            <select class="form-control" id = "departmentSelector">
+    <option value="">选择部门</option>
+
+
+</select>
+        </template>
+        <script>
+            
+            
+
+
+
+            const OWNER_TYPE = {
+                OWNER: '1001',
+                TENANT: '1003'
+            };
+            // 考核类型
+            const ASSESSMENT_TYPE = {
+                BUSINESS: 2,
+                COMMON: 1,
+                SYSTEM: 3,
+            };
+            
+            // 删除时的类型
+            const DELETE_TYPE = {
+                TABLE: 1, // 删除通用考核表
+                BUSINESS_ITEM: 2,  // 删除业务考核项
+                COMMON_ITEM: 3, // 删除通用考核项
+            }
+            // 考核人员
+            const ASSESSMENT_OBJECT_TYPE = {
+                STAFF: 1,
+                SUPERVISOR: 2,
+                MANAGER: 3,
+            }
+            
+            const AUTO_ASSESSMENT_TYPE = {
+                INSPECTION: 1,
+                WORK_ORDER: 2,
+                ATTENDANCE: 3,
+            }
+            
+            // 考核项目
+            const ASSESSMENT_ITEM_TYPE = {
+                COMMON_ITEM: 1,
+                BUSINESS_ITEM: 2,
+            }
+            
+            const DEFAULT_PAGE = 1;
+            const DEFAULT_ROWS = 10;
+
+            
+            export default {
+                props: {"parentModal":"true"},
+                components: {
+                    
+                },
+                data () {
+                    return {"departmentSelect2Info":{"orgs":[],"orgId":"-1","orgName":"","companyId":"","departmentId":"","staffId":"","departmentSelector":{}}}    
+                },
+                mounted() {
+                ( () => {
+            this._initDepartmentSelect2();
+        })()
+( () => {
+            this.$vc.on('departmentSelect2', 'setDepartment',  (_param) => {
+                this.$vc.copyObject(_param, this.departmentSelect2Info);
+                var option = new Option(_param.departmentName, _param.departmentId, true, true);
+                this.departmentSelect2Info.departmentSelector.append(option);
+            });
+
+            this.$vc.on('departmentSelect2', 'clearDepartment',  (_param) => {
+                this.departmentSelect2Info = {
+                    orgs: [],
+                    orgId: '-1',
+                    orgName: '',
+                    companyId:'',
+                    staffId: '',
+                    departmentId:'',
+                    departmentSelector: {}
+                };
+            });
+        })()   
+                },
+                methods: {
+                    _initDepartmentSelect2:function () {
+                console.log("调用_initDepartmentSelect2 方法");
+                $.fn.modal.Constructor.prototype.enforceFocus = function () {
+                };
+                $.fn.select2.defaults.set('width', '100%');
+                this.departmentSelect2Info.departmentSelector = $('#departmentSelector').select2({
+                    placeholder: '必填，请选择部门',
+                    allowClear: true,//允许清空
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }, // 自定义格式化防止xss注入
+                    ajax: {
+                        url: "/callComponent/orgManage/list",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            console.log("param", params);
+                            var _term = "";
+                            if (params.hasOwnProperty("term")) {
+                                _term = params.term;
+                            }
+                            return {
+                                orgName: _term,
+                                orgLevel:'3',
+                                page: 1,
+                                row: 10,
+                                parentOrgId: this.departmentSelect2Info.orgId,
+                                communityId: this.$vc.getCurrentCommunity().communityId
+                            };
+                        },
+                        processResults: function (data) {
+                            console.log(data, this._filterOrgData(data.orgs));
+                            return {
+                                results: this._filterOrgData(data.orgs)
+                            };
+                        },
+                        cache: true
+                    }
+                });
+                $('#departmentSelector').on("select2:select",  (evt) => {
+                    //这里是选中触发的事件
+                    //evt.params.data 是选中项的信息
+                    console.log('select', evt);
+                    this.departmentSelect2Info.orgId = evt.params.data.id;
+                    this.departmentSelect2Info.departmentId = evt.params.data.id;
+                    this.departmentSelect2Info.orgName = evt.params.data.text;
+                });
+
+                $('#departmentSelector').on("select2:unselect",  (evt) => {
+                    //这里是取消选中触发的事件
+                    //如配置allowClear: true后，触发
+                    console.log('unselect', evt);
+                    this.departmentSelect2Info.orgId = '-1';
+                    this.departmentSelect2Info.orgName = '';
+
+                });
+            },_filterOrgData:function (_Orgs) {
+                var _tmpOrgs = [];
+                for (var i = 0; i < _Orgs.length; i++) {
+                    var _tmpOrg = {
+                        id: _Orgs[i].orgId,
+                        text: _Orgs[i].orgName
+                    };
+                    _tmpOrgs.push(_tmpOrg);
+                }
+                return _tmpOrgs;
+            },
+                },
+            }
+    
+        </script>
+        <style>
+            
+        </style>
+    

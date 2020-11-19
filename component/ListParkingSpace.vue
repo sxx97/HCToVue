@@ -1,0 +1,334 @@
+
+        <template>
+            <div id="component" >
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>查询条件</h5>
+                    <div class="ibox-tools" style="top:10px;">
+                        <button type="button" class="btn btn-link btn-sm" style="margin-right:10px;"
+                                v-on:click="_moreCondition()">{{listParkingSpaceInfo.moreCondition == true?'隐藏':'更多'}}
+                        </button>
+                    </div>
+                </div>
+                <div class="ibox-content" >
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group input-group">
+                                <input type="text" placeholder="请选择停车场"
+                                       v-model="listParkingSpaceInfo.conditions.areaNum" class="form-control">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                            v-on:click="_openChooseParkingArea()"><i
+                                            class="glyphicon glyphicon-search"></i> 选择
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <input type="text" placeholder="请填写车位编号" class=" form-control" v-model="listParkingSpaceInfo.num">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <select class="custom-select" v-model="listParkingSpaceInfo.conditions.state">
+                                    <option selected value="">必填，请选择车位状态</option>
+                                    <option value="S">出售</option>
+                                    <option value="H">出租</option>
+                                    <option value="F">空闲</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-primary btn-sm" v-on:click="_queryRoomMethod()"><i
+                                    class="glyphicon glyphicon-search"></i> 查询
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" v-if="listParkingSpaceInfo.moreCondition == true">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <input type="text" placeholder="请填写车位ID" class="form-control form-control-sm"
+                                       v-model="listParkingSpaceInfo.conditions.psId">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>停车位信息</h5>
+                    <div class="ibox-tools" style="top:10px;">
+
+                        <form>
+                            <div class="form-row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary btn-sm" v-on:click="_openAddParkingSpaceModal(-1)">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        添加
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
+                        <thead>
+                        <tr>
+                            <th>车位ID</th>
+                            <th data-hide="phone">车位编码</th>
+                            <th data-hide="phone">停车场ID</th>
+                            <th data-hide="phone">停车场编号</th>
+                            <th data-hide="phone">车位状态</th>
+                            <th data-hide="phone">面积</th>
+                            <th class="text-right">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="parkingSpace in listParkingSpaceInfo.parkingSpaces">
+                            <td>
+                                {{parkingSpace.psId}}
+                            </td>
+
+                            <td>
+                                {{parkingSpace.num}}
+                            </td>
+                            <td>
+                                {{parkingSpace.paId}}
+                            </td>
+                            <td>
+                                {{parkingSpace.areaNum}}
+                            </td>
+                            <td>
+                                {{vc.component._viewParkingSpaceState(parkingSpace.state)}}
+                            </td>
+                            <td>
+                                {{parkingSpace.area}}
+                            </td>
+                            <td class="text-right">
+                                <div class="btn-group" v-if="parkingSpace.state =='F'">
+                                    <button class="btn-white btn btn-xs" v-on:click="_openToHireParkingSpaceModel(parkingSpace)">出租</button>
+                                </div>
+                                <div class="btn-group" v-if="parkingSpace.state =='F'">
+                                    <button class="btn-white btn btn-xs" v-on:click="_openToSellParkingSpaceModel(parkingSpace)">出售</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn-white btn btn-xs" v-on:click="_openEditParkingSpaceModel(parkingSpace)">修改</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn-white btn btn-xs" v-on:click="_openDelParkingSpaceModel(parkingSpace)">删除</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="7">
+                                <ul class="pagination float-right"></ul>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <!-- 分页 -->
+                    <vc:create name="pagination"></vc:create>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <vc:create
+            name="addParkingSpace"
+            notifyLoadDataComponentName="listParkingSpace"
+    ></vc:create>
+    <vc:create
+            name="editParkingSpace"
+            notifyLoadDataComponentName="listParkingSpace"
+
+    ></vc:create>
+    <vc:create name="deleteParkingSpace"
+               notifyLoadDataComponentName="listParkingSpace"
+    ></vc:create>
+
+    <vc:create name="chooseParkingArea"
+               emitChooseParkingArea="listParkingSpace"
+               emitLoadData="listParkingSpace"
+    ></vc:create>
+
+</div>
+        </template>
+        <script>
+            
+            import Pagination from '@/component/Pagination.vue';import AddParkingSpace from '@/component/AddParkingSpace.vue';import EditParkingSpace from '@/component/EditParkingSpace.vue';import DeleteParkingSpace from '@/component/DeleteParkingSpace.vue';import ChooseParkingArea from '@/component/ChooseParkingArea.vue';
+
+
+
+            const OWNER_TYPE = {
+                OWNER: '1001',
+                TENANT: '1003'
+            };
+            // 考核类型
+            const ASSESSMENT_TYPE = {
+                BUSINESS: 2,
+                COMMON: 1,
+                SYSTEM: 3,
+            };
+            
+            // 删除时的类型
+            const DELETE_TYPE = {
+                TABLE: 1, // 删除通用考核表
+                BUSINESS_ITEM: 2,  // 删除业务考核项
+                COMMON_ITEM: 3, // 删除通用考核项
+            }
+            // 考核人员
+            const ASSESSMENT_OBJECT_TYPE = {
+                STAFF: 1,
+                SUPERVISOR: 2,
+                MANAGER: 3,
+            }
+            
+            const AUTO_ASSESSMENT_TYPE = {
+                INSPECTION: 1,
+                WORK_ORDER: 2,
+                ATTENDANCE: 3,
+            }
+            
+            // 考核项目
+            const ASSESSMENT_ITEM_TYPE = {
+                COMMON_ITEM: 1,
+                BUSINESS_ITEM: 2,
+            }
+            
+            const DEFAULT_PAGE = 1;
+            const DEFAULT_ROWS = 10;
+
+            
+            export default {
+                props: {},
+                components: {
+                    Pagination,AddParkingSpace,EditParkingSpace,DeleteParkingSpace,ChooseParkingArea
+                },
+                data () {
+                    return {"listParkingSpaceInfo":{"parkingSpaces":[],"total":0,"records":1,"num":"","moreCondition":false,"conditions":{"psId":"","area":"","paId":"","areaNum":"","state":""}}}    
+                },
+                mounted() {
+                ( () => {
+            this._listParkingSpaceData(DEFAULT_PAGE, DEFAULT_ROWS);
+        })()
+( () => {
+            this.$vc.on('listParkingSpace', 'listParkingSpaceData',  () => {
+                this._listParkingSpaceData(DEFAULT_PAGE, DEFAULT_ROWS);
+                this.listParkingSpaceInfo.num = '';
+            });
+            this.$vc.on('listParkingSpace', 'chooseParkingArea',  (_parkingArea) => {
+                this.listParkingSpaceInfo.conditions.paId = _parkingArea.paId;
+                this.listParkingSpaceInfo.conditions.areaNum = _parkingArea.num;
+                this.listParkingSpaceInfo.num = '';
+            });
+
+            this.$vc.on('listParkingSpace', 'listParkingAreaData',  (_parkingArea) => {
+                this.listParkingSpaceInfo.conditions.paId = _parkingArea.paId;
+                this._listParkingSpaceData(DEFAULT_PAGE, DEFAULT_ROWS);
+                this.listParkingSpaceInfo.num = '';
+            });
+            this.$vc.on('pagination', 'page_event',  (_currentPage) => {
+                this._listParkingSpaceData(_currentPage, DEFAULT_ROWS);
+            });
+        })()   
+                },
+                methods: {
+                    _listParkingSpaceData:function (_page, _row) {
+                var param = {
+                    params: {
+                        page: _page,
+                        row: _row,
+                        communityId: this.$vc.getCurrentCommunity().communityId,
+                        num: this.listParkingSpaceInfo.num,
+                        psId: this.listParkingSpaceInfo.conditions.psId,
+                        area: this.listParkingSpaceInfo.conditions.area,
+                        paId: this.listParkingSpaceInfo.conditions.paId,
+                        state: this.listParkingSpaceInfo.conditions.state,
+                    }
+                }
+
+                //发送get请求
+                this.$vc.http.get('listParkingSpace',
+                    'list',
+                    param,
+                     (json, res) => {
+                        var listParkingSpaceData = JSON.parse(json);
+
+                        this.listParkingSpaceInfo.total = listParkingSpaceData.total;
+                        this.listParkingSpaceInfo.records = listParkingSpaceData.records;
+                        this.listParkingSpaceInfo.parkingSpaces = listParkingSpaceData.parkingSpaces;
+
+                        this.$vc.emit('pagination', 'init', {
+                            total: this.listParkingSpaceInfo.records,
+                            dataCount: this.listParkingSpaceInfo.total,
+                            currentPage: _page
+                        });
+                    },  (errInfo, error) => {
+                        console.log('请求失败处理');
+                    }
+                );
+
+            },_openAddParkingSpaceModal:function () { //打开添加框
+                this.$vc.emit('addParkingSpace', 'openAddParkingSpaceModal', -1);
+            },_openDelParkingSpaceModel:function (_parkingSpace) { // 打开删除对话框
+                this.$vc.emit('deleteParkingSpace', 'openParkingSpaceModel', _parkingSpace);
+            },_openEditParkingSpaceModel:function (_parkingSpace) {
+                this.$vc.emit('editParkingSpace', 'openEditParkingSpaceModal', _parkingSpace);
+            },_openToSellParkingSpaceModel:function(_parkingSpace){ // 出售
+                this.$vc.jumpToPage('/flow/sellParkingSpaceFlow?'+this.$vc.objToGetParam(_parkingSpace));
+            },_openToHireParkingSpaceModel:function(_parkingSpace){ //出租
+                this.$vc.jumpToPage('/flow/hireParkingSpaceFlow?'+this.$vc.objToGetParam(_parkingSpace));
+            },_viewParkingSpaceState:function (state) {
+                if (state == 'F') {
+                    return "空闲";
+                } else if (state == 'S') {
+                    return "已售卖";
+                } else if (state == 'H') {
+                    return "已出租";
+                } else {
+                    return "未知";
+                }
+            },_viewParkingTypeCd:function (typeCd) {
+                var result = '未知';
+                switch (typeCd) {
+                    case '1001':
+                        result = '地上停车位';
+                        break;
+                    case '2001':
+                        result = '地下停车位';
+                        break;
+                }
+                return result;
+            },_queryRoomMethod:function () {
+                this._listParkingSpaceData(DEFAULT_PAGE, DEFAULT_ROWS);
+            },_moreCondition:function () {
+                if (this.listParkingSpaceInfo.moreCondition) {
+                    this.listParkingSpaceInfo.moreCondition = false;
+                } else {
+                    this.listParkingSpaceInfo.moreCondition = true;
+                }
+            },_openChooseParkingArea:function(){
+                this.$vc.emit('chooseParkingArea','openChooseParkingAreaModel',{});
+            },
+                },
+            }
+    
+        </script>
+        <style>
+            
+        </style>
+    

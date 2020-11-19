@@ -10,17 +10,22 @@ async function createVue(data: string, fileName: string, dirName: string = 'comp
 }
 
 async function createRoute(routes: RouteView[]) {
-    const basePath = '/flow';
     let routers = [],
         importComponents = [];
     for (const [key, val] of Object.entries(routes)) {
         const {routeName, viewComponent} = val;
-        routers.push({
-            path: basePath + '/' + routeName,
-            name: 'Login',
-            component: viewComponent,
-        })
-        importComponents.push(`import ${viewComponent} from '@views/${viewComponent}.vue'`);
+        try {
+            routers.push(`
+                {
+                    path: basePath + '/' + '${routeName}',
+                    name: "${viewComponent}",
+                    component: ${viewComponent},
+                }
+            `)
+            importComponents.push(`import ${viewComponent} from '@views/${viewComponent}.vue'`);
+        } catch(err) {
+            throw err;
+        }
     }
 
 
@@ -34,7 +39,7 @@ async function createRoute(routes: RouteView[]) {
 
         const basePath = '/flow';
 
-        const routes = ${JSON.stringify(routers)}
+        const routes = [${routers.toString()}]
 
         const router = new VueRouter({
             mode: 'history',

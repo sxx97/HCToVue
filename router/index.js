@@ -8,7 +8,607 @@
 
         const basePath = '/flow';
 
-        const routes = [{"path":"/flow/AssessmentSummaryFlow","name":"Login","component":"AssessmentSummary"},{"path":"/flow/BindingVendorConfigFlow","name":"Login","component":"BindingVendorConfig"},{"path":"/flow/activitiesFlow","name":"Login","component":"ActivitiesManage"},{"path":"/flow/addAuditUserStepFlow","name":"Login","component":"AddAuditUserStep"},{"path":"/flow/addComplaintStepFlow","name":"Login","component":"AddComplaintStep"},{"path":"/flow/addNewOneVisit","name":"Login","component":"AddVisitSpace"},{"path":"/flow/addOwnerRoomBindingFlow","name":"Login","component":"AddOwnerRoomBinding"},{"path":"/flow/addRoomBindingFlow","name":"Login","component":"AddRoomBinding"},{"path":"/flow/addStaffStepFlow","name":"Login","component":"AddStaffStep"},{"path":"/flow/advertFlow","name":"Login","component":"AdvertManage"},{"path":"/flow/advertVedioFlow","name":"Login","component":"AdvertVedioView"},{"path":"/flow/appFlow","name":"Login","component":"AppManage"},{"path":"/flow/applicationKeyFlow","name":"Login","component":"ApplicationKeyManage"},{"path":"/flow/assessmentManageFlow","name":"Login","component":"AssessmentManage"},{"path":"/flow/assetImportFlow","name":"Login","component":"AssetImport"},{"path":"/flow/assignTimeoutConfigFlow","name":"Login","component":"AssignTimeoutConfig"},{"path":"/flow/attendanceLogFlow","name":"Login","component":"AttendanceLogManage"},{"path":"/flow/auditAppUserBindingOwnerFlow","name":"Login","component":"AuditAppUserBindingOwnerManage"},{"path":"/flow/auditApplicationKeyFlow","name":"Login","component":"AuditApplicationKeyManage"},{"path":"/flow/auditCommunityFlow","name":"Login","component":"AuditCommunityManage"},{"path":"/flow/auditEnterCommunityFlow","name":"Login","component":"AuditEnterCommunityManage"},{"path":"/flow/auditUserFlow","name":"Login","component":"AuditUserManage"},{"path":"/flow/bannerFlow","name":"Login","component":"BannerManage"},{"path":"/flow/basePrivilegeFlow","name":"Login","component":"BasePrivilegeManage"},{"path":"/flow/billFlow","name":"Login","component":"BillManage"},{"path":"/flow/cacheFlow","name":"Login","component":"CacheManage"},{"path":"/flow/carBlackWhiteFlow","name":"Login","component":"CarBlackWhiteManage"},{"path":"/flow/carInFlow","name":"Login","component":"CarInManage"},{"path":"/flow/carInoutFlow","name":"Login","component":"CarInoutManage"},{"path":"/flow/changeStaffPwdFlow","name":"Login","component":"ChangeStaffPwd"},{"path":"/flow/communityFlow","name":"Login","component":"CommunityManage"},{"path":"/flow/complaintFlow","name":"Login","component":"ComplaintManage"},{"path":"/flow/configMenuFlow","name":"Login","component":"ConfigMenu"},{"path":"/flow/contractManageFlow","name":"Login","component":"ContractManage"},{"path":"/flow/deleteOwnerRoomFlow","name":"Login","component":"DeleteOwnerRoom"},{"path":"/flow/devServiceProvideFlow","name":"Login","component":"DevServiceProvide"},{"path":"/flow/editAutoAssessmentConfigFlow","name":"Login","component":"EditAutoAssessmentConfig"},{"path":"/flow/enterCommunity","name":"Login","component":"EnterCommunity"},{"path":"/flow/feeConfigFlow","name":"Login","component":"FeeConfigManage"},{"path":"/flow/handoverLogFlow","name":"Login","component":"HandoverLog"},{"path":"/flow/hireParkingSpaceFlow","name":"Login","component":"HireParkingSpace"},{"path":"/flow/index","name":"Login","component":"IndexContext"},{"path":"/flow/inspectionPlanFlow","name":"Login","component":"InspectionPlanManage"},{"path":"/flow/inspectionRouteFlow","name":"Login","component":"InspectionRouteManage"},{"path":"/flow/itemInFlow","name":"Login","component":"ItemInManage"},{"path":"/flow/itemOutFlow","name":"Login","component":"ItemOutManage"},{"path":"/flow/listParkingSpaceFeeFlow","name":"Login","component":"ListParkingSpaceFee"},{"path":"/flow/listRoomFeeFlow","name":"Login","component":"ListRoomFee"},{"path":"/flow/listStoresFlow","name":"Login","component":"ListStoreManage"},{"path":"/flow/login","name":"Login","component":"Login"},{"path":"/flow/machineFlow","name":"Login","component":"MachineManage"},{"path":"/flow/machineRecordFlow","name":"Login","component":"MachineRecordManage"},{"path":"/flow/machineTranslateFlow","name":"Login","component":"MachineTranslateManage"},{"path":"/flow/machineVistorPhotoFlow","name":"Login","component":"MachineVistorPhotoManage"},{"path":"/flow/mallManageFlow","name":"Login","component":"MallManage"},{"path":"/flow/mappingFlow","name":"Login","component":"MappingManage"},{"path":"/flow/menuFlow","name":"Login","component":"Menu"},{"path":"/flow/menuFlow","name":"Login","component":"MenuManage"},{"path":"/flow/menuGroupFlow","name":"Login","component":"Menu"},{"path":"/flow/menuGroupFlow","name":"Login","component":"MenuGroupManage"},{"path":"/flow/myAuditComplaintsFlow","name":"Login","component":"MyAuditComplaints"},{"path":"/flow/myAuditHistoryComplaintsFlow","name":"Login","component":"MyAuditHistoryComplaints"},{"path":"/flow/myAuditOrdersFlow","name":"Login","component":"MyAuditOrders"},{"path":"/flow/myRepairDispatchFlow","name":"Login","component":"MyRepairDispatchManage"},{"path":"/flow/noticeDetailFlow","name":"Login","component":"NoticeDetail"},{"path":"/flow/noticeFlow","name":"Login","component":"NoticeManage"},{"path":"/flow/orgFlow","name":"Login","component":"OrgManage"},{"path":"/flow/ownerDetailFlow","name":"Login","component":"OwnerDetail"},{"path":"/flow/ownerParkingSpaceFlow","name":"Login","component":"OwnerParkingSpace"},{"path":"/flow/ownerRepairFlow","name":"Login","component":"OwnerRepairManage"},{"path":"/flow/parkingAreaFlow","name":"Login","component":"ParkingAreaManage"},{"path":"/flow/parkingSpaceCreateFeeFlow","name":"Login","component":"ParkingSpaceCreateFee"},{"path":"/flow/parkingSpaceFeeFlow","name":"Login","component":"ParkingSpaceFee"},{"path":"/flow/parkingSpaceQrCodeFlow","name":"Login","component":"ParkingSpaceQrCode"},{"path":"/flow/passRecordFlow","name":"Login","component":"PassRecord"},{"path":"/flow/payFeeOrderFlow","name":"Login","component":"PayFeeOrder"},{"path":"/flow/privilege","name":"Login","component":"Privilege"},{"path":"/flow/propertyFeeFlow","name":"Login","component":"PropertyFee"},{"path":"/flow/purchaseApplyFlow","name":"Login","component":"PurchaseApplyManage"},{"path":"/flow/register","name":"Login","component":"Register"},{"path":"/flow/remainingParkingSpaceFlow","name":"Login","component":"RemainingParkingSpace"},{"path":"/flow/rentalFlow","name":"Login","component":"RentalManage"},{"path":"/flow/repairDispatchFlow","name":"Login","component":"RepairDispatchManage"},{"path":"/flow/repairDispatchStepFlow","name":"Login","component":"RepairDispatchStep"},{"path":"/flow/resourceStoreFlow","name":"Login","component":"ResourceStoreManage"},{"path":"/flow/roomCreateFeeFlow","name":"Login","component":"RoomCreateFee"},{"path":"/flow/roomFlow","name":"Login","component":"Room"},{"path":"/flow/sellParkingSpaceFlow","name":"Login","component":"SellParkingSpace"},{"path":"/flow/sellRoomFlow","name":"Login","component":"SellRoom"},{"path":"/flow/serviceBindingFlow","name":"Login","component":"ServiceBinding"},{"path":"/flow/serviceFlow","name":"Login","component":"ServiceManage"},{"path":"/flow/serviceImplFlow","name":"Login","component":"ServiceImplManage"},{"path":"/flow/serviceProvideFlow","name":"Login","component":"ServiceProvideManage"},{"path":"/flow/serviceRegisterFlow","name":"Login","component":"ServiceRegisterManage"},{"path":"/flow/staff","name":"Login","component":"Staff"},{"path":"/flow/staffPrivilege","name":"Login","component":"StaffPrivilege"},{"path":"/flow/tenantDetailFlow","name":"Login","component":"TenantDetail"},{"path":"/flow/unitFlow","name":"Login","component":"Unit"},{"path":"/flow/visitFlow","name":"Login","component":"VisitManage"},{"path":"/flow/workOrderFlow","name":"Login","component":"WorkOrderManage"}]
+        const routes = [
+                {
+                    path: basePath + '/' + 'AssessmentSummaryFlow',
+                    name: "AssessmentSummary",
+                    component: AssessmentSummary,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'BindingVendorConfigFlow',
+                    name: "BindingVendorConfig",
+                    component: BindingVendorConfig,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'activitiesFlow',
+                    name: "ActivitiesManage",
+                    component: ActivitiesManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'addAuditUserStepFlow',
+                    name: "AddAuditUserStep",
+                    component: AddAuditUserStep,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'addComplaintStepFlow',
+                    name: "AddComplaintStep",
+                    component: AddComplaintStep,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'addNewOneVisit',
+                    name: "AddVisitSpace",
+                    component: AddVisitSpace,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'addOwnerRoomBindingFlow',
+                    name: "AddOwnerRoomBinding",
+                    component: AddOwnerRoomBinding,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'addRoomBindingFlow',
+                    name: "AddRoomBinding",
+                    component: AddRoomBinding,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'addStaffStepFlow',
+                    name: "AddStaffStep",
+                    component: AddStaffStep,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'advertFlow',
+                    name: "AdvertManage",
+                    component: AdvertManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'advertVedioFlow',
+                    name: "AdvertVedioView",
+                    component: AdvertVedioView,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'appFlow',
+                    name: "AppManage",
+                    component: AppManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'applicationKeyFlow',
+                    name: "ApplicationKeyManage",
+                    component: ApplicationKeyManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'assessmentManageFlow',
+                    name: "AssessmentManage",
+                    component: AssessmentManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'assetImportFlow',
+                    name: "AssetImport",
+                    component: AssetImport,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'assignTimeoutConfigFlow',
+                    name: "AssignTimeoutConfig",
+                    component: AssignTimeoutConfig,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'attendanceLogFlow',
+                    name: "AttendanceLogManage",
+                    component: AttendanceLogManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'auditAppUserBindingOwnerFlow',
+                    name: "AuditAppUserBindingOwnerManage",
+                    component: AuditAppUserBindingOwnerManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'auditApplicationKeyFlow',
+                    name: "AuditApplicationKeyManage",
+                    component: AuditApplicationKeyManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'auditCommunityFlow',
+                    name: "AuditCommunityManage",
+                    component: AuditCommunityManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'auditEnterCommunityFlow',
+                    name: "AuditEnterCommunityManage",
+                    component: AuditEnterCommunityManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'auditUserFlow',
+                    name: "AuditUserManage",
+                    component: AuditUserManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'bannerFlow',
+                    name: "BannerManage",
+                    component: BannerManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'basePrivilegeFlow',
+                    name: "BasePrivilegeManage",
+                    component: BasePrivilegeManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'billFlow',
+                    name: "BillManage",
+                    component: BillManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'cacheFlow',
+                    name: "CacheManage",
+                    component: CacheManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'carBlackWhiteFlow',
+                    name: "CarBlackWhiteManage",
+                    component: CarBlackWhiteManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'carInFlow',
+                    name: "CarInManage",
+                    component: CarInManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'carInoutFlow',
+                    name: "CarInoutManage",
+                    component: CarInoutManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'changeStaffPwdFlow',
+                    name: "ChangeStaffPwd",
+                    component: ChangeStaffPwd,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'communityFlow',
+                    name: "CommunityManage",
+                    component: CommunityManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'complaintFlow',
+                    name: "ComplaintManage",
+                    component: ComplaintManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'configMenuFlow',
+                    name: "ConfigMenu",
+                    component: ConfigMenu,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'contractManageFlow',
+                    name: "ContractManage",
+                    component: ContractManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'deleteOwnerRoomFlow',
+                    name: "DeleteOwnerRoom",
+                    component: DeleteOwnerRoom,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'devServiceProvideFlow',
+                    name: "DevServiceProvide",
+                    component: DevServiceProvide,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'editAutoAssessmentConfigFlow',
+                    name: "EditAutoAssessmentConfig",
+                    component: EditAutoAssessmentConfig,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'enterCommunity',
+                    name: "EnterCommunity",
+                    component: EnterCommunity,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'feeConfigFlow',
+                    name: "FeeConfigManage",
+                    component: FeeConfigManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'handoverLogFlow',
+                    name: "HandoverLog",
+                    component: HandoverLog,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'hireParkingSpaceFlow',
+                    name: "HireParkingSpace",
+                    component: HireParkingSpace,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'index',
+                    name: "IndexContext",
+                    component: IndexContext,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'inspectionPlanFlow',
+                    name: "InspectionPlanManage",
+                    component: InspectionPlanManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'inspectionRouteFlow',
+                    name: "InspectionRouteManage",
+                    component: InspectionRouteManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'itemInFlow',
+                    name: "ItemInManage",
+                    component: ItemInManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'itemOutFlow',
+                    name: "ItemOutManage",
+                    component: ItemOutManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'listParkingSpaceFeeFlow',
+                    name: "ListParkingSpaceFee",
+                    component: ListParkingSpaceFee,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'listRoomFeeFlow',
+                    name: "ListRoomFee",
+                    component: ListRoomFee,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'listStoresFlow',
+                    name: "ListStoreManage",
+                    component: ListStoreManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'login',
+                    name: "Login",
+                    component: Login,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'machineFlow',
+                    name: "MachineManage",
+                    component: MachineManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'machineRecordFlow',
+                    name: "MachineRecordManage",
+                    component: MachineRecordManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'machineTranslateFlow',
+                    name: "MachineTranslateManage",
+                    component: MachineTranslateManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'machineVistorPhotoFlow',
+                    name: "MachineVistorPhotoManage",
+                    component: MachineVistorPhotoManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'mallManageFlow',
+                    name: "MallManage",
+                    component: MallManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'mappingFlow',
+                    name: "MappingManage",
+                    component: MappingManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'menuFlow',
+                    name: "Menu",
+                    component: Menu,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'menuFlow',
+                    name: "MenuManage",
+                    component: MenuManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'menuGroupFlow',
+                    name: "Menu",
+                    component: Menu,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'menuGroupFlow',
+                    name: "MenuGroupManage",
+                    component: MenuGroupManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'myAuditComplaintsFlow',
+                    name: "MyAuditComplaints",
+                    component: MyAuditComplaints,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'myAuditHistoryComplaintsFlow',
+                    name: "MyAuditHistoryComplaints",
+                    component: MyAuditHistoryComplaints,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'myAuditOrdersFlow',
+                    name: "MyAuditOrders",
+                    component: MyAuditOrders,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'myRepairDispatchFlow',
+                    name: "MyRepairDispatchManage",
+                    component: MyRepairDispatchManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'noticeDetailFlow',
+                    name: "NoticeDetail",
+                    component: NoticeDetail,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'noticeFlow',
+                    name: "NoticeManage",
+                    component: NoticeManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'orgFlow',
+                    name: "OrgManage",
+                    component: OrgManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'ownerDetailFlow',
+                    name: "OwnerDetail",
+                    component: OwnerDetail,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'ownerParkingSpaceFlow',
+                    name: "OwnerParkingSpace",
+                    component: OwnerParkingSpace,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'ownerRepairFlow',
+                    name: "OwnerRepairManage",
+                    component: OwnerRepairManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'parkingAreaFlow',
+                    name: "ParkingAreaManage",
+                    component: ParkingAreaManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'parkingSpaceCreateFeeFlow',
+                    name: "ParkingSpaceCreateFee",
+                    component: ParkingSpaceCreateFee,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'parkingSpaceFeeFlow',
+                    name: "ParkingSpaceFee",
+                    component: ParkingSpaceFee,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'parkingSpaceQrCodeFlow',
+                    name: "ParkingSpaceQrCode",
+                    component: ParkingSpaceQrCode,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'passRecordFlow',
+                    name: "PassRecord",
+                    component: PassRecord,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'payFeeOrderFlow',
+                    name: "PayFeeOrder",
+                    component: PayFeeOrder,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'privilege',
+                    name: "Privilege",
+                    component: Privilege,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'propertyFeeFlow',
+                    name: "PropertyFee",
+                    component: PropertyFee,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'purchaseApplyFlow',
+                    name: "PurchaseApplyManage",
+                    component: PurchaseApplyManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'register',
+                    name: "Register",
+                    component: Register,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'remainingParkingSpaceFlow',
+                    name: "RemainingParkingSpace",
+                    component: RemainingParkingSpace,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'rentalFlow',
+                    name: "RentalManage",
+                    component: RentalManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'repairDispatchFlow',
+                    name: "RepairDispatchManage",
+                    component: RepairDispatchManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'repairDispatchStepFlow',
+                    name: "RepairDispatchStep",
+                    component: RepairDispatchStep,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'resourceStoreFlow',
+                    name: "ResourceStoreManage",
+                    component: ResourceStoreManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'roomCreateFeeFlow',
+                    name: "RoomCreateFee",
+                    component: RoomCreateFee,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'roomFlow',
+                    name: "Room",
+                    component: Room,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'sellParkingSpaceFlow',
+                    name: "SellParkingSpace",
+                    component: SellParkingSpace,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'sellRoomFlow',
+                    name: "SellRoom",
+                    component: SellRoom,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'serviceBindingFlow',
+                    name: "ServiceBinding",
+                    component: ServiceBinding,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'serviceFlow',
+                    name: "ServiceManage",
+                    component: ServiceManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'serviceImplFlow',
+                    name: "ServiceImplManage",
+                    component: ServiceImplManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'serviceProvideFlow',
+                    name: "ServiceProvideManage",
+                    component: ServiceProvideManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'serviceRegisterFlow',
+                    name: "ServiceRegisterManage",
+                    component: ServiceRegisterManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'staff',
+                    name: "Staff",
+                    component: Staff,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'staffPrivilege',
+                    name: "StaffPrivilege",
+                    component: StaffPrivilege,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'tenantDetailFlow',
+                    name: "TenantDetail",
+                    component: TenantDetail,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'unitFlow',
+                    name: "Unit",
+                    component: Unit,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'visitFlow',
+                    name: "VisitManage",
+                    component: VisitManage,
+                }
+            ,
+                {
+                    path: basePath + '/' + 'workOrderFlow',
+                    name: "WorkOrderManage",
+                    component: WorkOrderManage,
+                }
+            ]
 
         const router = new VueRouter({
             mode: 'history',
