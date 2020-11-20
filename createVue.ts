@@ -5,7 +5,7 @@ import { RouteView } from "./readDirs";
 const writeFile = promisify(fs.writeFile);
 
 
-const createPath = '/home/sxx97/code/workCode/HC/huanyou-client/src'
+const createPath = ''
 
 async function createVue(data: string, fileName: string, dirName: string = 'components') {
     await writeFile(createPath +'/' + dirName + '/' + fileName + '.vue', data);
