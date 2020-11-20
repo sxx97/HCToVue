@@ -5,24 +5,30 @@ import { RouteView } from "./readDirs";
 const writeFile = promisify(fs.writeFile);
 
 
-async function createVue(data: string, fileName: string, dirName: string = 'component') {
-    await writeFile(__dirname +'/' + dirName + '/' + fileName + '.vue', data);
+const createPath = '/home/sxx97/code/workCode/HC/huanyou-client/src'
+
+async function createVue(data: string, fileName: string, dirName: string = 'components') {
+    await writeFile(createPath +'/' + dirName + '/' + fileName + '.vue', data);
 }
 
 async function createRoute(routes: RouteView[]) {
     let routers = [],
-        importComponents = [];
+        importComponents = [],
+        importComponentsUrl = [];
     for (const [key, val] of Object.entries(routes)) {
         const {routeName, viewComponent} = val;
         try {
             routers.push(`
                 {
                     path: basePath + '/' + '${routeName}',
-                    name: "${viewComponent}",
+                    name: "${routeName}",
                     component: ${viewComponent},
                 }
             `)
-            importComponents.push(`import ${viewComponent} from '@views/${viewComponent}.vue'`);
+            if (!importComponents.includes(viewComponent)) {
+                importComponents.push(viewComponent);
+                importComponentsUrl.push(`import ${viewComponent} from '@/views/${viewComponent}.vue'`);
+            }
         } catch(err) {
             throw err;
         }
@@ -30,27 +36,27 @@ async function createRoute(routes: RouteView[]) {
 
 
     const routeFile = `
-        import Vue from 'vue'
-        import VueRouter from 'vue-router'
-        ${importComponents.join(';')}
+    import Vue from 'vue'
+    import VueRouter from 'vue-router'
+    ${importComponentsUrl.join(';\n\t')}
 
 
-        Vue.use(VueRouter);
+    Vue.use(VueRouter);
 
-        const basePath = '/flow';
+    const basePath = '/flow';
 
-        const routes = [${routers.toString()}]
+    const routes = [${routers.toString()}]
 
-        const router = new VueRouter({
-            mode: 'history',
-            base: process.env.BASE_URL,
-            routes
-        })
-          
-        export default router
+    const router = new VueRouter({
+        mode: 'history',
+        base: process.env.BASE_URL,
+        routes
+    })
+        
+    export default router
     
     `
-    await writeFile(__dirname+'/router/index.js', routeFile);
+    await writeFile(createPath+'/router/index.js', routeFile);
 
 }
 

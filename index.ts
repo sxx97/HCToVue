@@ -12,10 +12,13 @@ enum FileSuffix {
 
 interface VueOptions {
     el?: string;
-    props: any;
+    props?: any;
+    watch?: any;
+    filter?: any;
+    computed?: any;
     data: Function;
-    methods: any,
-    template: string;
+    methods: any;
+    template?: string;
     mounted?: Function;
 }
 

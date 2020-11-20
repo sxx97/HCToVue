@@ -83,8 +83,9 @@ let window = {
             let methods = '',
                 mounted = '',
                 props = {},
+                watch = '',
                 dataObj = {};                
-            mounted += anonymousToArrow(`(${replaceVcContent(String(options._initMethod).replace('_initMethod', 'function'))})()`)+'\n';
+            mounted += anonymousToArrow(`(${replaceVcContent(String(options._initMethod).replace('_initMethod', 'function'))})()`)+';\n\f';
             mounted += anonymousToArrow(`(${replaceVcContent(String(options._initEvent).replace('_initEvent', 'function'))})()`);
             
             if(options.propTypes) {
@@ -93,12 +94,34 @@ let window = {
                 }
             }
 
+            if (options.watch) {
+                for(const [key, value] of Object.entries(options.watch)) {           
+                    if(value instanceof Function) {
+                        if (value.toString().includes(key) && value.toString().indexOf(key) < 10) {
+                            watch += replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
+                        } else {
+                            watch += "'" + key + "':" + replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
+                        }
+                    } else {
+                        let deepProperty = '';
+                        for(const [deepKey, deepVal] of Object.entries(value)) {
+                            if (deepVal.toString().includes(deepKey) && deepVal.toString().indexOf(deepKey) < 10) {
+                                deepProperty += replaceVcContent(anonymousToArrow(deepVal.toString()))+',\n\f\f\f\f'
+                            } else {
+                                deepProperty += "'" + deepKey + "'" +':'+replaceVcContent(anonymousToArrow(deepVal.toString()))+',\n\f\f\f\f'
+                            }
+                        }
+                        watch += "'" + key + "': {\n\f\f\f\f" + replaceVcContent(deepProperty) + '},\n\f\f\f\f';
+                    }
+                }
+            }
+
             if (options.methods) {
                 for(const [key, value] of Object.entries(options.methods)) {                
                     if (value.toString().includes(key) && value.toString().indexOf(key) < 10) {
-                        methods += replaceVcContent(anonymousToArrow(value.toString()))+','
+                        methods += replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
                     } else {
-                        methods += key+':'+replaceVcContent(anonymousToArrow(value.toString()))+','
+                        methods += key+':'+replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
                     }
                     
                 }
@@ -113,7 +136,7 @@ let window = {
             }
 
             // console.log(options, '传入参数');
-            scriptTemplate = jsTemplate(JSON.stringify(dataObj), methods, mounted, JSON.stringify(props));
+            scriptTemplate = jsTemplate(JSON.stringify(dataObj), methods, watch, mounted, JSON.stringify(props));
             // console.log(scriptTemplate, '转变过后');
         }
     }
@@ -142,7 +165,7 @@ class Vue {
     }
 
     static component(tagName: string, options: VueOptions) {
-        let {methods, data, mounted, template, props} = options;
+        let {methods, data, mounted, template, props, watch, computed, filter} = options;
         if (tagName.includes('-')) {
             const name = tagName.split('-');
             tagName = '';
@@ -153,18 +176,21 @@ class Vue {
         vueTemplate.push({
             componentName: tagName,
             template: `
-                <template>
-                    ${template}
-                </template>
-                <script>
-                    export default {
-                        name: ${tagName},
-                        ${props},
-                        ${data},
-                        ${mounted},
-                        ${methods},
-                    }
-                </script>
+<template>
+    ${template}
+</template>
+<script>
+    export default {
+        name: ${tagName},
+        ${props},
+        ${watch},
+        ${filter},
+        ${computed}
+        ${data},
+        ${mounted},
+        ${methods},
+    }
+</script>
             `
         })
     }
@@ -195,7 +221,7 @@ function anonymousToArrow(jsStr: string) {
 async function generateScriptTemplate(path: string, componentImport: string[]) {
     let parseErr: any | null = null;
     const data = await readFile(path, 'utf-8');
-    imports = componentImport;
+    imports = Array.from(new Set(componentImport));
     // console.log(path, '/n/n/n/n==============================================/n/n/n/n')
     // console.log('==============================================');
     // console.log('==============================================');
@@ -237,8 +263,8 @@ async function generateScriptTemplate(path: string, componentImport: string[]) {
 function replaceVcContent(str: any) {
     return String(str).replace(/vc\.this/g, 'this')
         .replace(/vc/g, 'this.$vc')
-        .replace(/vc.component.emit/g, 'vc.emit')
-        .replace(/vc.component.on/g, 'vc.on')
+        .replace(/vc.component.\$emit/g, 'vc.emit')
+        .replace(/vc.component.\$on/g, 'vc.on')
         .replace(/this.\$vc.component/g,'this');
         
 }
@@ -247,73 +273,81 @@ function replaceVcContent(str: any) {
  * 生成vue中的js内容
  * @param data data部门
  * @param methods methods部分
+ * @param watch watch
  * @param mounted mounted部分
  */
-function jsTemplate(data, methods, mounted, props) {
-    let importStatement = '';
+function jsTemplate(data, methods, watch, mounted, props) {
+    let importStatement = '',
+        components = '';
     imports.forEach(val => {
-        importStatement += `import ${val} from '@/component/${val}.vue';`
+        importStatement += `import ${val} from '@/components/${val}.vue';\n\t`;
+        components += val+',\n\t\t\t';
     })
     return `
-            ${importStatement}
+    ${importStatement}
 
 
 
-            const OWNER_TYPE = {
-                OWNER: '1001',
-                TENANT: '1003'
-            };
-            // 考核类型
-            const ASSESSMENT_TYPE = {
-                BUSINESS: 2,
-                COMMON: 1,
-                SYSTEM: 3,
-            };
-            
-            // 删除时的类型
-            const DELETE_TYPE = {
-                TABLE: 1, // 删除通用考核表
-                BUSINESS_ITEM: 2,  // 删除业务考核项
-                COMMON_ITEM: 3, // 删除通用考核项
-            }
-            // 考核人员
-            const ASSESSMENT_OBJECT_TYPE = {
-                STAFF: 1,
-                SUPERVISOR: 2,
-                MANAGER: 3,
-            }
-            
-            const AUTO_ASSESSMENT_TYPE = {
-                INSPECTION: 1,
-                WORK_ORDER: 2,
-                ATTENDANCE: 3,
-            }
-            
-            // 考核项目
-            const ASSESSMENT_ITEM_TYPE = {
-                COMMON_ITEM: 1,
-                BUSINESS_ITEM: 2,
-            }
-            
-            const DEFAULT_PAGE = 1;
-            const DEFAULT_ROWS = 10;
+    const OWNER_TYPE = {
+        OWNER: '1001',
+        TENANT: '1003'
+    };
+    // 考核类型
+    const ASSESSMENT_TYPE = {
+        BUSINESS: 2,
+        COMMON: 1,
+        SYSTEM: 3,
+    };
+    
+    // 删除时的类型
+    const DELETE_TYPE = {
+        TABLE: 1, // 删除通用考核表
+        BUSINESS_ITEM: 2,  // 删除业务考核项
+        COMMON_ITEM: 3, // 删除通用考核项
+    }
+    // 考核人员
+    const ASSESSMENT_OBJECT_TYPE = {
+        STAFF: 1,
+        SUPERVISOR: 2,
+        MANAGER: 3,
+    }
+    
+    const AUTO_ASSESSMENT_TYPE = {
+        INSPECTION: 1,
+        WORK_ORDER: 2,
+        ATTENDANCE: 3,
+    }
+    
+    // 考核项目
+    const ASSESSMENT_ITEM_TYPE = {
+        COMMON_ITEM: 1,
+        BUSINESS_ITEM: 2,
+    }
+    
+    const DEFAULT_PAGE = 1;
+    const DEFAULT_ROWS = 10;
 
-            
-            export default {
-                props: ${props},
-                components: {
-                    ${imports}
-                },
-                data () {
-                    return ${data}    
-                },
-                mounted() {
-                ${mounted}   
-                },
-                methods: {
-                    ${methods}
-                },
-            }
+    
+    export default {
+        props: ${props},
+        components: {
+            ${components}
+        },
+        data () {
+            return ${data}    
+        },
+        ${
+            watch && watch != '' ? `watch: {
+                ${watch}
+            },` : '' 
+        }
+        mounted() {
+        ${mounted}   
+        },
+        methods: {
+            ${methods}
+        },
+    }
     `
 }
 

@@ -4,7 +4,7 @@ import * as path from 'path';
 import {FileSuffix} from './index';
 import {generateScriptTemplate} from './parseJs'
 import {generateCssTemplate} from './parseCss'
-import {generateHtmlTemplate} from './parseHtml'
+import {generateHtmlTemplate, parseComponentName} from './parseHtml'
 import { createVue } from './createVue';
 
 interface RouteView {
@@ -80,8 +80,8 @@ async function readFiles(filePath: string, files: string[], pageComponents: stri
                         .then(res => {
                             htmlTemplate = res.template;
                             res.components.forEach(val => {
-                                const componentName = firstUpperCase(val.name.replace(/"/g, ''));
-                                componentImport.push(componentName);
+                                // const componentName = .replace(/"/g, '');
+                                componentImport.push(val.componentName);
                             })
                         });
                 } catch(err) {
@@ -128,9 +128,9 @@ async function readFiles(filePath: string, files: string[], pageComponents: stri
     console.log(errCount, '解析的报错信息========', parseErr);
     // console.log('生成的vue文件数量', vueCount);
     if (pageComponents.includes(firstUpperCase(fileName))) {
-        createVue(mergeFile(htmlTemplate, jsTemplate, cssTemplate), firstUpperCase(fileName), 'views');
+        createVue(mergeFile(htmlTemplate, jsTemplate, cssTemplate), parseComponentName(fileName), 'views');
     } else {
-        createVue(mergeFile(htmlTemplate, jsTemplate, cssTemplate), firstUpperCase(fileName));
+        createVue(mergeFile(htmlTemplate, jsTemplate, cssTemplate), parseComponentName(fileName));
     }
 }
 
@@ -151,15 +151,17 @@ function firstUpperCase(str: string) {
  */
 function mergeFile(template: string, script: string, style: string) {
     return `
-        <template>
-            ${template}
-        </template>
-        <script>
-            ${script}
-        </script>
-        <style>
-            ${style}
-        </style>
+<template>
+    <div>
+        ${template}
+    </div>
+</template>
+<script>
+    ${script}
+</script>
+<style>
+    ${style}
+</style>
     `
 }
 
