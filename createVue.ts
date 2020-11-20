@@ -13,18 +13,28 @@ async function createVue(data: string, fileName: string, dirName: string = 'comp
 
 async function createRoute(routes: RouteView[]) {
     let routers = [],
+        mainRouters = [],
         importComponents = [],
         importComponentsUrl = [];
     for (const [key, val] of Object.entries(routes)) {
         const {routeName, viewComponent} = val;
         try {
-            routers.push(`
-                {
-                    path: basePath + '/' + '${routeName}',
+            if (['login', 'register'].includes(routeName)) {
+                routers.push(
+                `{
+                    path: basePath + '/${routeName}',
                     name: "${routeName}",
                     component: ${viewComponent},
-                }
-            `)
+                }\n\t\t\t\t`);
+            } else {
+                mainRouters.push(
+                `{
+                    path: '${routeName}',
+                    name: "${routeName}",
+                    component: ${viewComponent},
+                }\n\t\t\t\t`)
+            }
+            
             if (!importComponents.includes(viewComponent)) {
                 importComponents.push(viewComponent);
                 importComponentsUrl.push(`import ${viewComponent} from '@/views/${viewComponent}.vue'`);
@@ -34,10 +44,21 @@ async function createRoute(routes: RouteView[]) {
         }
     }
 
+    if (mainRouters.length > 0) {
+        routers.push(`{
+            path: basePath,
+            component: MainPage,
+            children: [
+                ${mainRouters}
+            ]
+        }`)
+    }
+
 
     const routeFile = `
-    import Vue from 'vue'
-    import VueRouter from 'vue-router'
+    import Vue from 'vue';
+    import VueRouter from 'vue-router';
+    import MainPage from '@/views/MainPage.vue';
     ${importComponentsUrl.join(';\n\t')}
 
 
@@ -45,7 +66,9 @@ async function createRoute(routes: RouteView[]) {
 
     const basePath = '/flow';
 
-    const routes = [${routers.toString()}]
+    const routes = [
+        ${routers}
+    ]
 
     const router = new VueRouter({
         mode: 'history',

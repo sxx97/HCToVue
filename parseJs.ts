@@ -85,7 +85,7 @@ let window = {
                 props = {},
                 watch = '',
                 dataObj = {};                
-            mounted += anonymousToArrow(`(${replaceVcContent(String(options._initMethod).replace('_initMethod', 'function'))})()`)+';\n\f';
+            mounted += anonymousToArrow(`(${replaceVcContent(String(options._initMethod).replace('_initMethod', 'function'))})()`)+';\n\t';
             mounted += anonymousToArrow(`(${replaceVcContent(String(options._initEvent).replace('_initEvent', 'function'))})()`);
             
             if(options.propTypes) {
@@ -98,20 +98,20 @@ let window = {
                 for(const [key, value] of Object.entries(options.watch)) {           
                     if(value instanceof Function) {
                         if (value.toString().includes(key) && value.toString().indexOf(key) < 10) {
-                            watch += replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
+                            watch += replaceVcContent(anonymousToArrow(value.toString()))+',\n\t\t'
                         } else {
-                            watch += "'" + key + "':" + replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
+                            watch += "'" + key + "':" + replaceVcContent(anonymousToArrow(value.toString()))+',\n\t\t'
                         }
                     } else {
                         let deepProperty = '';
                         for(const [deepKey, deepVal] of Object.entries(value)) {
                             if (deepVal.toString().includes(deepKey) && deepVal.toString().indexOf(deepKey) < 10) {
-                                deepProperty += replaceVcContent(anonymousToArrow(deepVal.toString()))+',\n\f\f\f\f'
+                                deepProperty += replaceVcContent(anonymousToArrow(deepVal.toString()))+',\n\t\t'
                             } else {
-                                deepProperty += "'" + deepKey + "'" +':'+replaceVcContent(anonymousToArrow(deepVal.toString()))+',\n\f\f\f\f'
+                                deepProperty += "'" + deepKey + "'" +':'+replaceVcContent(anonymousToArrow(deepVal.toString()))+',\n\t\t'
                             }
                         }
-                        watch += "'" + key + "': {\n\f\f\f\f" + replaceVcContent(deepProperty) + '},\n\f\f\f\f';
+                        watch += "'" + key + "': {\n\t\t" + replaceVcContent(deepProperty) + '},\n\t\t';
                     }
                 }
             }
@@ -119,9 +119,9 @@ let window = {
             if (options.methods) {
                 for(const [key, value] of Object.entries(options.methods)) {                
                     if (value.toString().includes(key) && value.toString().indexOf(key) < 10) {
-                        methods += replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
+                        methods += replaceVcContent(anonymousToArrow(value.toString()))+',\n\t\t'
                     } else {
-                        methods += key+':'+replaceVcContent(anonymousToArrow(value.toString()))+',\n\f\f\f\f'
+                        methods += key+':'+replaceVcContent(anonymousToArrow(value.toString()))+',\n\t\t'
                     }
                     
                 }
